@@ -1,6 +1,6 @@
 # 加拿大冰酒 · 葡萄酒 网站
 
-A product catalog for Canadian icewines and wines, with prices in CAD and RMB. It is aimed at customers in China and Canada.
+A product catalog for Canadian icewines and wines, with prices in CAD and RMB. It is aimed at customers in China.
 
 ## Run it locally
 
