@@ -1,0 +1,16 @@
+# Caddy: the public web server in front of the Node app.
+# Install:  cp /opt/canada-wine/deploy/Caddyfile /etc/caddy/Caddyfile && systemctl reload caddy
+#
+# STAGE 1 (testing by IP address, plain HTTP — passwords are NOT encrypted, use test passwords only):
+:80 {
+	encode gzip
+	reverse_proxy 127.0.0.1:3001
+}
+
+# STAGE 2 (after buying a domain and pointing its DNS A record at the server IP):
+# delete the block above and use this one instead. Caddy gets the HTTPS certificate automatically.
+#
+# example.com, www.example.com {
+# 	encode gzip
+# 	reverse_proxy 127.0.0.1:3001
+# }
