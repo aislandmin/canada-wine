@@ -9,7 +9,7 @@ English version: [DEPLOY.en.md](DEPLOY.en.md)
 浏览器 ──► Caddy（80/443 端口，买域名后自动 HTTPS）──► Node 网站（127.0.0.1:3001）──► data/app.db + data/uploads/
 ```
 
-下面的命令里，`服务器IP` 换成 Vultr 给你的 IP 地址，`你的GitHub用户名` 换成你的 GitHub 用户名。
+下面的命令里，`服务器IP` 换成 Vultr 给你的 IP 地址。代码从公开仓库 https://github.com/aislandmin/canada-wine 下载。
 标着 **【服务器】** 的命令在 SSH 登录服务器后执行；标着 **【电脑】** 的在你自己的 Windows PowerShell 里执行。
 
 ---
@@ -64,23 +64,18 @@ apt update && apt install -y caddy
 
 ## 4. 创建网站专用用户，并从 GitHub 下载代码
 
-仓库是**私有**的，所以给服务器一把"只读钥匙"（Deploy key）。
+仓库是**公开**的，服务器可以直接下载，不需要密码或钥匙。
 
 **【服务器】**
 ```bash
 useradd -m -s /bin/bash wine
-sudo -u wine ssh-keygen -t ed25519 -N "" -f /home/wine/.ssh/id_ed25519
-cat /home/wine/.ssh/id_ed25519.pub
-```
-复制最后一行输出（以 `ssh-ed25519` 开头）。然后在 GitHub 上：
-仓库页面 → **Settings** → **Deploy keys** → **Add deploy key** → Title 填 `vultr`，Key 粘贴刚才那一行，**不要**勾选 Allow write access → **Add key**。
-
-**【服务器】**
-```bash
 mkdir /opt/canada-wine && chown wine:wine /opt/canada-wine
-sudo -u wine git clone git@github.com:你的GitHub用户名/canada-wine.git /opt/canada-wine
+sudo -u wine git clone https://github.com/aislandmin/canada-wine.git /opt/canada-wine
+ls /opt/canada-wine          # 应看到 server、src、deploy 等文件夹
 ```
-（问 `Are you sure you want to continue connecting` 时输入 `yes`）
+
+> 仓库公开，所以**永远不要**把密码、`data/` 文件夹或客户资料提交到 GitHub。
+> `.gitignore` 已经挡住了 `data/`、`.env` 和 PDF，提交前用 `git status` 看一眼就更放心。
 
 ## 5. 复制产品照片到服务器（第一次启动之前）
 

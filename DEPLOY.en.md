@@ -9,7 +9,7 @@ The server starts with a **fresh database** (local data is test data and is not 
 browser ──► Caddy (ports 80/443, automatic HTTPS once you have a domain) ──► Node app (127.0.0.1:3001) ──► data/app.db + data/uploads/
 ```
 
-Replace `SERVER_IP` with the IP Vultr gives you and `YOUR_GITHUB_USER` with your GitHub username.
+Replace `SERVER_IP` with the IP Vultr gives you. The code is downloaded from the public repo https://github.com/aislandmin/canada-wine.
 **[server]** commands run after you SSH into the server; **[PC]** commands run in Windows PowerShell on your own computer.
 
 ---
@@ -63,22 +63,18 @@ apt update && apt install -y caddy
 
 ## 4. Create the app user and download the code from GitHub
 
-The repo is **private**, so give the server a read-only deploy key.
+The repo is **public**, so the server can download it directly; no password or key needed.
 
 **[server]**
 ```bash
 useradd -m -s /bin/bash wine
-sudo -u wine ssh-keygen -t ed25519 -N "" -f /home/wine/.ssh/id_ed25519
-cat /home/wine/.ssh/id_ed25519.pub
-```
-Copy the printed line (starts with `ssh-ed25519`). On GitHub: repo → **Settings** → **Deploy keys** → **Add deploy key** → Title `vultr`, paste the key, leave **Allow write access unchecked** → **Add key**.
-
-**[server]**
-```bash
 mkdir /opt/canada-wine && chown wine:wine /opt/canada-wine
-sudo -u wine git clone git@github.com:YOUR_GITHUB_USER/canada-wine.git /opt/canada-wine
+sudo -u wine git clone https://github.com/aislandmin/canada-wine.git /opt/canada-wine
+ls /opt/canada-wine          # should list server, src, deploy, …
 ```
-(type `yes` at the host-key question)
+
+> Because the repo is public, **never** commit passwords, the `data/` folder or customer information.
+> `.gitignore` already excludes `data/`, `.env` and PDFs; a quick `git status` before each commit makes sure.
 
 ## 5. Copy the product photos (before the first start)
 
