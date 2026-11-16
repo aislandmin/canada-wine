@@ -1,20 +1,15 @@
 import { Link, useParams } from 'react-router-dom';
-import type { Product } from '../../shared/types';
-import { useApi } from '../api';
 import ProductGallery from '../components/ProductGallery';
-import { money } from '../format';
-import { useSettings } from '../settings';
+import { findProduct } from '../data/catalog';
 
 export default function ProductPage() {
   const { id } = useParams();
-  const { contactText } = useSettings();
-  const { data: p, error, loading } = useApi<Product>(`/products/${id}`);
+  const p = findProduct(id);
 
-  if (loading) return <p className="container muted center page-pad">加载中…</p>;
-  if (error || !p)
+  if (!p)
     return (
       <div className="container empty page-pad">
-        <p>{error?.status === 404 ? '该产品不存在或已下架。' : `加载失败：${error?.message}`}</p>
+        <p>该产品不存在。</p>
         <Link to="/" className="btn btn-ghost">
           返回产品目录
         </Link>
@@ -52,29 +47,6 @@ export default function ProductPage() {
           <h1 className="detail-title">{p.nameZh}</h1>
           <p className="name-en">{p.nameEn}</p>
           <p className="meta">{[p.vintage && `${p.vintage} 年份`, p.volume].filter(Boolean).join(' · ')}</p>
-
-          <div className="detail-prices">
-            <div>
-              <span className="price-label">加币</span>
-              <span className="price big">{money(p.price.CAD, 'CAD')}</span>
-            </div>
-            {/* "$29 / ¥160", written the same way as the gift-box price below */}
-            <span className="detail-price-sep" aria-hidden="true">
-              /
-            </span>
-            <div>
-              <span className="price-label">人民币</span>
-              <span className="price big">{money(p.price.CNY, 'CNY')}</span>
-            </div>
-          </div>
-          {p.giftBox && (
-            <p className="gift-box">
-              礼盒礼袋（另加）：{money(p.giftBox.CAD, 'CAD')} / {money(p.giftBox.CNY, 'CNY')}
-            </p>
-          )}
-          <p className="contact-note">
-            {contactText} 累计消费可享阶梯折扣，<Link to="/discount">查看折扣政策</Link>。
-          </p>
 
           {p.tastingNotes && (
             <section>

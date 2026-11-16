@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import type { Product } from '../../shared/types';
+import type { Product } from '../types';
 import BottleImage from './BottleImage';
 
 /** Horizontal swipe detection for touch screens (WeChat on phones). */

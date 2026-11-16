@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Product } from '../../shared/types';
+import type { Product } from '../types';
 
 interface Palette {
   glass: string;
